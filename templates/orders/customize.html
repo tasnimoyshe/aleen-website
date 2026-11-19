@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% block title %}Custom Floral Atelier — Aleen{% endblock %}
+
+{% block content %}
+<section class="max-w-6xl mx-auto px-6 py-14 sm:py-20">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+
+        <!-- Left Side: Editorial Guide -->
+        <div class="lg:col-span-5 space-y-6 lg:sticky lg:top-28">
+            <div>
+                <p class="text-[11px] uppercase tracking-[0.26em] text-[#9F9679] font-semibold">Bespoke Floristry</p>
+                <h1 class="font-serif-display text-4xl sm:text-5xl font-semibold text-[#2D2427] leading-tight mt-2">
+                    Bring Your Pinterest Dream to Life
+                </h1>
+                <p class="text-sm text-[#2D2427]/75 leading-relaxed mt-4">
+                    Have a specific bouquet, floral bag, or colour palette in mind? Upload your reference photo and our florists will craft it fresh to order.
+                </p>
+            </div>
+
+            <!-- How it works steps -->
+            <div class="space-y-4 pt-2 border-t border-[#E3D6BF]">
+                <div class="flex items-start gap-3.5">
+                    <span class="w-7 h-7 rounded-full bg-[#933B5B]/10 text-[#933B5B] text-xs font-semibold flex items-center justify-center shrink-0 mt-0.5">1</span>
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-wider text-[#2D2427]">Upload Reference</p>
+                        <p class="text-xs text-[#2D2427]/65 mt-0.5">Share a Pinterest screenshot or inspiration photo with your preferred budget or occasion.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3.5">
+                    <span class="w-7 h-7 rounded-full bg-[#933B5B]/10 text-[#933B5B] text-xs font-semibold flex items-center justify-center shrink-0 mt-0.5">2</span>
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-wider text-[#2D2427]">20-Minute Call Confirmation</p>
+                        <p class="text-xs text-[#2D2427]/65 mt-0.5">Our team calls you within 20 minutes to confirm bloom availability, pricing, and delivery slot.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3.5">
+                    <span class="w-7 h-7 rounded-full bg-[#933B5B]/10 text-[#933B5B] text-xs font-semibold flex items-center justify-center shrink-0 mt-0.5">3</span>
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-wider text-[#2D2427]">Handcrafted & Delivered</p>
+                        <p class="text-xs text-[#2D2427]/65 mt-0.5">Arranged by our atelier and delivered fresh — free delivery within Uttara.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-[#AABAAE]/20 border border-[#AABAAE]/50 text-xs text-[#2D2427]/80">
+                <strong class="text-[#2D2427]">Note:</strong> Seasonal blooms may vary slightly; we will always confirm exact flower alternatives with you over the phone before crafting.
+            </div>
+        </div>
+
+        <!-- Right Side: Customization Form -->
+        <div class="lg:col-span-7">
+            <form method="post" enctype="multipart/form-data"
+                  class="bg-white/95 rounded-3xl border border-[#E3D6BF] p-7 sm:p-10 shadow-sm space-y-6">
+                {% csrf_token %}
+
+                <div>
+                    <h2 class="font-serif-display text-2xl sm:text-3xl font-semibold text-[#2D2427]">Custom Order Request</h2>
+                    <p class="text-xs text-[#9F9679] mt-1">Fill in your details and attach your inspiration photo below.</p>
+                </div>
+
+                {% if error_message %}
+                <div class="px-4 py-3 rounded-xl bg-[#933B5B]/10 border border-[#933B5B]/30 text-[#933B5B] text-xs font-medium">
+                    {{ error_message }}
+                </div>
+                {% endif %}
+
+                <!-- Image Upload with Live Preview -->
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-[#2D2427]/75 font-medium mb-2">
+                        Reference Photo (Pinterest / Inspiration) *
+                    </label>
+                    <label for="reference-image-input"
+                           class="block cursor-pointer rounded-2xl border-2 border-dashed border-[#E3D6BF] hover:border-[#933B5B] bg-[#FAF7F2]/70 transition p-6 text-center">
+                        <input id="reference-image-input" type="file" name="reference_image" accept="image/*" required class="hidden">
+
+                        <div id="upload-placeholder" class="space-y-2 py-4">
+                            <div class="w-11 h-11 mx-auto rounded-full bg-[#E3D6BF]/60 flex items-center justify-center text-[#933B5B]">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+                                </svg>
+                            </div>
+                            <p class="text-xs font-medium text-[#2D2427]">Click to upload reference image</p>
+                            <p class="text-[11px] text-[#9F9679]">JPG, PNG or WEBP</p>
+                        </div>
+
+                        <div id="upload-preview-wrap" class="hidden space-y-2">
+                            <img id="upload-preview-img" src="" alt="Preview"
+                                 class="max-h-64 mx-auto rounded-xl object-contain border border-[#E3D6BF]">
+                            <p id="upload-file-name" class="text-[11px] text-[#933B5B] font-medium"></p>
+                            <p class="text-[10px] text-[#9F9679]">Click to change photo</p>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Customer Details -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-[#2D2427]/75 mb-1.5">Your Name *</label>
+                        <input type="text" name="customer_name" required placeholder="Full name"
+                               class="w-full px-4 py-3 rounded-xl border border-[#E3D6BF] bg-[#FAF7F2]/60 text-sm focus:outline-none focus:border-[#933B5B]">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-[#2D2427]/75 mb-1.5">Phone Number *</label>
+                        <input type="tel" name="phone" required placeholder="01XXXXXXXXX"
+                               class="w-full px-4 py-3 rounded-xl border border-[#E3D6BF] bg-[#FAF7F2]/60 text-sm focus:outline-none focus:border-[#933B5B]">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-[#2D2427]/75 mb-1.5">Delivery Address *</label>
+                    <input type="text" name="address" required placeholder="House, Road, Sector / Area (e.g. Uttara Sector 7)"
+                           class="w-full px-4 py-3 rounded-xl border border-[#E3D6BF] bg-[#FAF7F2]/60 text-sm focus:outline-none focus:border-[#933B5B]">
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-[#2D2427]/75 mb-1.5">
+                        Special Instructions / Budget / Delivery Date (Optional)
+                    </label>
+                    <textarea name="description" rows="3"
+                              placeholder="e.g., Budget ৳2,500, blush pink wrapping paper, delivery tomorrow at 6 PM, and a small handwritten note card..."
+                              class="w-full px-4 py-3 rounded-xl border border-[#E3D6BF] bg-[#FAF7F2]/60 text-sm focus:outline-none focus:border-[#933B5B]"></textarea>
+                </div>
+
+                <button type="submit"
+                        class="w-full py-3.5 rounded-full bg-[#933B5B] text-white text-xs uppercase tracking-[0.2em] font-semibold shadow-md hover:bg-[#B5728A] transition">
+                    Submit Custom Request
+                </button>
+            </form>
+        </div>
+
+    </div>
+</section>
+
+<!-- 20-Minute Confirmation Pop-up Modal -->
+{% if submitted %}
+<div id="confirm-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-[#2D2427]/60 backdrop-blur-sm px-4">
+    <div class="bg-[#FAF7F2] w-full max-w-md rounded-3xl border border-[#E3D6BF] p-8 sm:p-10 text-center shadow-2xl relative">
+        <button type="button" onclick="document.getElementById('confirm-modal').remove()"
+                class="absolute top-4 right-5 text-[#9F9679] hover:text-[#933B5B] text-lg">✕</button>
+
+        <div class="w-14 h-14 mx-auto rounded-full bg-[#AABAAE]/35 border border-[#AABAAE] flex items-center justify-center text-[#2D2427] mb-5">
+            <svg class="w-7 h-7 text-[#933B5B]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+            </svg>
+        </div>
+
+        <p class="text-[10px] uppercase tracking-[0.25em] text-[#9F9679] font-semibold">
+            Request Received {% if ref_id %}• #{{ ref_id }}{% endif %}
+        </p>
+        <h3 class="font-serif-display text-3xl font-semibold text-[#2D2427] mt-1">
+            We’ll Call Within 20 Minutes
+        </h3>
+        <p class="text-xs sm:text-sm text-[#2D2427]/75 leading-relaxed mt-3">
+            Your custom order request has been received. Within the next <strong>20 minutes</strong>, a member of the Aleen team will call you to confirm flower availability, pricing, and delivery details.
+        </p>
+
+        <div class="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="{% url 'shop' %}"
+               class="px-6 py-2.5 rounded-full bg-[#933B5B] text-white text-xs uppercase tracking-wider font-medium hover:bg-[#B5728A] transition">
+                Explore Shop
+            </a>
+            <a href="{% url 'customize_order' %}"
+               class="px-6 py-2.5 rounded-full border border-[#E3D6BF] bg-white text-[#2D2427] text-xs uppercase tracking-wider font-medium hover:border-[#933B5B] transition">
+                Close
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script>
+    const fileInput = document.getElementById('reference-image-input');
+    const placeholder = document.getElementById('upload-placeholder');
+    const previewWrap = document.getElementById('upload-preview-wrap');
+    const previewImg = document.getElementById('upload-preview-img');
+    const fileNameEl = document.getElementById('upload-file-name');
+
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            previewImg.src = ev.target.result;
+            fileNameEl.textContent = file.name;
+            placeholder.classList.add('hidden');
+            previewWrap.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    });
+</script>
+{% endblock %}

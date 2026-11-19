@@ -1,0 +1,166 @@
+{% extends 'orders/staff_base.html' %}
+{% block title %}Sales & Accounts — Aleen Portal{% endblock %}
+
+{% block content %}
+<section class="max-w-7xl mx-auto px-6 py-10">
+    <div class="mb-7">
+        <p class="text-[11px] uppercase tracking-[0.22em] text-[#9F9679] font-semibold">
+            {% if is_admin %}Aleen Financial & Profit Ledger{% else %}Aleen Sales Overview{% endif %}
+        </p>
+        <h1 class="font-serif-display text-3xl sm:text-4xl font-semibold text-[#2D2427]">
+            {{ period_label }}
+        </h1>
+    </div>
+
+    <!-- Quick Range Tabs (Today / Week / Month / Year) + Custom Month Filter -->
+    <div class="bg-white rounded-2xl border border-[#E3D6BF] p-4 mb-8 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div class="flex flex-wrap gap-2">
+            <a href="?range=today"
+               class="px-4 py-2 rounded-full text-xs uppercase tracking-wider transition {% if active_range == 'today' %}bg-[#933B5B] text-white{% else %}bg-[#FAF7F2] text-[#2D2427] border border-[#E3D6BF] hover:border-[#933B5B]{% endif %}">
+                Today
+            </a>
+            <a href="?range=week"
+               class="px-4 py-2 rounded-full text-xs uppercase tracking-wider transition {% if active_range == 'week' %}bg-[#933B5B] text-white{% else %}bg-[#FAF7F2] text-[#2D2427] border border-[#E3D6BF] hover:border-[#933B5B]{% endif %}">
+                This Week
+            </a>
+            <a href="?range=month"
+               class="px-4 py-2 rounded-full text-xs uppercase tracking-wider transition {% if active_range == 'month' %}bg-[#933B5B] text-white{% else %}bg-[#FAF7F2] text-[#2D2427] border border-[#E3D6BF] hover:border-[#933B5B]{% endif %}">
+                This Month
+            </a>
+            <a href="?range=year&year={{ selected_year }}"
+               class="px-4 py-2 rounded-full text-xs uppercase tracking-wider transition {% if active_range == 'year' %}bg-[#933B5B] text-white{% else %}bg-[#FAF7F2] text-[#2D2427] border border-[#E3D6BF] hover:border-[#933B5B]{% endif %}">
+                This Year
+            </a>
+        </div>
+
+        <form method="get" class="flex flex-wrap items-center gap-2.5">
+            <input type="hidden" name="range" value="custom">
+            <select name="month" class="px-3 py-2 rounded-xl border border-[#E3D6BF] bg-[#FAF7F2] text-xs font-medium focus:outline-none focus:border-[#933B5B]">
+                <option value="all" {% if selected_month == 'all' %}selected{% endif %}>All Months</option>
+                {% for m_num, m_name in months %}
+                <option value="{{ m_num }}" {% if selected_month == m_num %}selected{% endif %}>{{ m_name }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="year" class="px-3 py-2 rounded-xl border border-[#E3D6BF] bg-[#FAF7F2] text-xs font-medium focus:outline-none focus:border-[#933B5B]">
+                {% for y in available_years %}
+                <option value="{{ y }}" {% if selected_year == y %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="px-4 py-2 rounded-full bg-[#2D2427] text-white text-xs uppercase tracking-wider hover:bg-[#933B5B] transition">
+                Apply
+            </button>
+        </form>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+        <div class="bg-white p-6 rounded-2xl border border-[#E3D6BF]">
+            <p class="text-[11px] uppercase tracking-widest text-[#9F9679]">Total Sales Revenue</p>
+            <p class="font-serif-display text-3xl font-semibold text-[#933B5B] mt-2">৳{{ total_revenue|floatformat:2 }}</p>
+            <p class="text-[11px] text-[#2D2427]/60 mt-1">{{ total_orders_count }} orders • {{ total_items_sold }} items</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-[#E3D6BF]">
+            <p class="text-[11px] uppercase tracking-widest text-[#9F9679]">Online Website Sales</p>
+            <p class="font-serif-display text-3xl font-semibold text-[#2D2427] mt-2">৳{{ online_revenue|floatformat:2 }}</p>
+            <p class="text-[11px] text-[#2D2427]/60 mt-1">Excludes delivery fee</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-[#E3D6BF]">
+            <p class="text-[11px] uppercase tracking-widest text-[#9F9679]">In-Store (POS) Sales</p>
+            <p class="font-serif-display text-3xl font-semibold text-[#2D2427] mt-2">৳{{ store_revenue|floatformat:2 }}</p>
+            <p class="text-[11px] text-[#2D2427]/60 mt-1">Regular + Customised</p>
+        </div>
+
+        {% if is_admin %}
+        <div class="bg-[#AABAAE]/25 p-6 rounded-2xl border border-[#AABAAE]">
+            <p class="text-[11px] uppercase tracking-widest text-[#2D2427]/75">Net Profit (Admin Only)</p>
+            <p class="font-serif-display text-3xl font-semibold text-[#2D2427] mt-2">৳{{ net_profit|floatformat:2 }}</p>
+            <p class="text-[11px] text-[#2D2427]/65 mt-1">Total Cost: ৳{{ total_cost|floatformat:2 }}</p>
+        </div>
+        {% else %}
+        <div class="bg-[#E3D6BF]/35 p-6 rounded-2xl border border-[#E3D6BF]">
+            <p class="text-[11px] uppercase tracking-widest text-[#9F9679]">Total Items Sold</p>
+            <p class="font-serif-display text-3xl font-semibold text-[#2D2427] mt-2">{{ total_items_sold }} pcs</p>
+            <p class="text-[11px] text-[#2D2427]/60 mt-1">Online + Store combined</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Top Selling & 12-Month Breakdown -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="lg:col-span-6">
+            <h2 class="font-serif-display text-2xl font-semibold text-[#2D2427] mb-4">Top Selling Items</h2>
+            <div class="bg-white rounded-2xl border border-[#E3D6BF] overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-[#E3D6BF]/40 text-[#2D2427]/75 uppercase tracking-wider text-[10px]">
+                        <tr>
+                            <th class="px-4 py-3">#</th>
+                            <th class="px-4 py-3">Item</th>
+                            <th class="px-4 py-3 text-center">Qty</th>
+                            <th class="px-4 py-3 text-right">Sales</th>
+                            {% if is_admin %}<th class="px-4 py-3 text-right">Profit</th>{% endif %}
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#E3D6BF]/50">
+                        {% for item in top_products %}
+                        <tr>
+                            <td class="px-4 py-3 font-semibold text-[#933B5B]">{{ forloop.counter }}</td>
+                            <td class="px-4 py-3">
+                                <p class="font-semibold text-[#2D2427]">{{ item.item_title }}</p>
+                                <p class="text-[10px] text-[#9F9679]">{{ item.item_cat }}</p>
+                            </td>
+                            <td class="px-4 py-3 text-center font-semibold">{{ item.qty_sold }}</td>
+                            <td class="px-4 py-3 text-right">৳{{ item.revenue|floatformat:2 }}</td>
+                            {% if is_admin %}
+                            <td class="px-4 py-3 text-right font-semibold text-[#2D2427]">৳{{ item.profit|floatformat:2 }}</td>
+                            {% endif %}
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="px-4 py-8 text-center text-[#2D2427]/55">এই সময়ে কোনো বিক্রি রেকর্ড হয়নি।</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="lg:col-span-6">
+            <h2 class="font-serif-display text-2xl font-semibold text-[#2D2427] mb-4">Yearly Summary ({{ selected_year }})</h2>
+            <div class="bg-white rounded-2xl border border-[#E3D6BF] overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-[#E3D6BF]/40 text-[#2D2427]/75 uppercase tracking-wider text-[10px]">
+                        <tr>
+                            <th class="px-4 py-3">Month</th>
+                            <th class="px-4 py-3 text-right">Online</th>
+                            <th class="px-4 py-3 text-right">Store</th>
+                            <th class="px-4 py-3 text-right">Total</th>
+                            {% if is_admin %}<th class="px-4 py-3 text-right">Profit</th>{% endif %}
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#E3D6BF]/50">
+                        {% for row in yearly_breakdown %}
+                        <tr>
+                            <td class="px-4 py-2.5">
+                                <a href="?range=custom&year={{ selected_year }}&month={{ row.month_num }}" class="hover:text-[#933B5B] underline decoration-[#E3D6BF]">
+                                    {{ row.month_name }}
+                                </a>
+                            </td>
+                            <td class="px-4 py-2.5 text-right">৳{{ row.online|floatformat:0 }}</td>
+                            <td class="px-4 py-2.5 text-right">৳{{ row.store|floatformat:0 }}</td>
+                            <td class="px-4 py-2.5 text-right font-semibold text-[#933B5B]">৳{{ row.total|floatformat:0 }}</td>
+                            {% if is_admin %}
+                            <td class="px-4 py-2.5 text-right">৳{{ row.profit|floatformat:0 }}</td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

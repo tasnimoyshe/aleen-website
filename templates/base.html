@@ -1,0 +1,204 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Aleen — Exotic Floral Atelier{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF7F2; color: #2D2427; }
+        .font-serif-display { font-family: 'Cormorant Garamond', serif; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+    <!-- Top Minimal Bar -->
+    <div class="bg-[#9F9679] text-[#FAF7F2] text-center text-[11px] tracking-[0.22em] py-2 uppercase font-medium">
+        Complimentary Delivery in Uttara &nbsp;•&nbsp; Handcrafted Exotic Blooms
+    </div>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-[#FAF7F2]/90 border-b border-[#E3D6BF]/70">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- Top-Left Logo -->
+            <a href="{% url 'home' %}" class="flex items-center gap-3 group">
+                <img src="{% static 'images/logo(2).png' %}" alt="Aleen" class="h-11 w-11 rounded-full object-cover ring-1 ring-[#9F9679]/40">
+                <span class="font-serif-display text-2xl font-semibold tracking-wider text-[#933B5B]">Aleen</span>
+            </a>
+
+            <!-- Center Navigation -->
+            <nav class="hidden md:flex items-center gap-9 text-xs uppercase tracking-[0.16em] font-medium text-[#2D2427]/80">
+                <a href="#about" class="hover:text-[#933B5B] transition">About</a>
+                <a href="{% url 'shop' %}" class="hover:text-[#933B5B] transition">Shop</a>
+                <a href="{% url 'home' %}#store" class="hover:text-[#933B5B] transition">Store</a>
+                <a href="{% url 'customize_order' %}" class="text-[#933B5B] font-semibold hover:opacity-75 transition">Customization ✦</a>
+            </nav>
+
+            <!-- Right Icons (Clean SVG Bag & Account) -->
+            <div class="flex items-center gap-5">
+                <button id="cart-btn" class="relative text-[#2D2427] hover:text-[#933B5B] transition" aria-label="Shopping Bag">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                    <span id="cart-count" class="absolute -top-2 -right-2.5 text-[10px] bg-[#933B5B] text-white w-4 h-4 rounded-full flex items-center justify-center font-medium">0</span>
+                </button>
+                <a href="/aleen-management/" class="text-[#2D2427] hover:text-[#933B5B] transition" title="Member / Admin Login">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- International Minimal Footer -->
+    <footer id="about" class="bg-[#933B5B] text-[#FAF7F2]">
+        <div class="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-6 border-b border-white/15">
+            <div>
+                <span class="font-serif-display text-3xl font-semibold tracking-wide">Aleen</span>
+                <p class="text-xs text-[#E3D6BF] tracking-widest uppercase mt-1">Exotic Floral Atelier</p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-7 text-xs tracking-wider uppercase text-[#FAF7F2]/85">
+                <a href="{% url 'home' %}" class="hover:text-white">Home</a>
+                <a href="{% url 'shop' %}" class="hover:text-white">Shop</a>
+                <a href="{% url 'customize_order' %}" class="hover:text-white">Customization</a>
+                <a href="{% url 'home' %}#reviews" class="hover:text-white">Reviews</a>
+                <a href="#about" class="hover:text-white">About Us</a>
+            </div>
+            <div class="flex items-center gap-4 text-xs text-[#E3D6BF]">
+                <a href="{{ site_settings.facebook_url|default:'#' }}" class="hover:text-white transition">Facebook</a>
+                <span>•</span>
+                <a href="{{ site_settings.instagram_url|default:'#' }}" class="hover:text-white transition">Instagram</a>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row justify-between items-center text-[11px] text-[#FAF7F2]/70 gap-2">
+            <p>© 2026 Aleen Exotic Floral Atelier. All Rights Reserved.</p>
+            <p>{{ site_settings.contact_phone|default:"+880 1XXX-XXXXXX" }} &nbsp;|&nbsp; {{ site_settings.contact_email|default:"hello@aleen.com" }}</p>
+        </div>
+    </footer>
+
+    <!-- Slide-Out Shopping Bag Drawer -->
+    <div id="cart-backdrop" class="fixed inset-0 bg-[#2D2427]/40 backdrop-blur-xs z-50 hidden opacity-0 transition-opacity duration-300"></div>
+    <aside id="cart-drawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-[#FAF7F2] shadow-2xl z-50 translate-x-full transition-transform duration-300 flex flex-col border-l border-[#E3D6BF]">
+        <div class="px-6 py-5 border-b border-[#E3D6BF] flex items-center justify-between">
+            <h2 class="font-serif-display text-2xl font-semibold text-[#2D2427]">Your Floral Bag</h2>
+            <button id="cart-close" class="text-[#2D2427]/60 hover:text-[#933B5B] text-xl leading-none">✕</button>
+        </div>
+
+        <div id="cart-items-container" class="flex-grow overflow-y-auto px-6 py-5 space-y-4">
+            <p class="text-xs text-center text-[#2D2427]/60 py-10">Your bag is currently empty.</p>
+        </div>
+
+        <div id="cart-footer" class="hidden px-6 py-5 border-t border-[#E3D6BF] bg-white/70 space-y-4">
+            <div class="flex items-center justify-between">
+                <span class="text-xs uppercase tracking-widest text-[#2D2427]/70">Subtotal</span>
+                <span id="cart-subtotal" class="text-lg font-semibold text-[#933B5B]">৳0</span>
+            </div>
+            <p class="text-[11px] text-[#9F9679]">Complimentary delivery in Uttara calculated at checkout.</p>
+            <a href="{% url 'checkout' %}"
+               class="block w-full text-center py-3.5 rounded-full bg-[#933B5B] text-white text-xs uppercase tracking-[0.18em] font-medium hover:bg-[#B5728A] transition">
+                Proceed to Guest Checkout
+            </a>
+        </div>
+    </aside>
+
+    <script>
+        const CSRF_TOKEN = "{{ csrf_token }}";
+        const cartDrawer = document.getElementById('cart-drawer');
+        const cartBackdrop = document.getElementById('cart-backdrop');
+        const cartCountEl = document.getElementById('cart-count');
+        const cartItemsEl = document.getElementById('cart-items-container');
+        const cartFooterEl = document.getElementById('cart-footer');
+        const cartSubtotalEl = document.getElementById('cart-subtotal');
+
+        function openCart() {
+            cartBackdrop.classList.remove('hidden');
+            setTimeout(() => {
+                cartBackdrop.classList.remove('opacity-0');
+                cartDrawer.classList.remove('translate-x-full');
+            }, 10);
+        }
+
+        function closeCart() {
+            cartDrawer.classList.add('translate-x-full');
+            cartBackdrop.classList.add('opacity-0');
+            setTimeout(() => cartBackdrop.classList.add('hidden'), 300);
+        }
+
+        function renderCart(data) {
+            cartCountEl.textContent = data.total_count || 0;
+            if (!data.items || data.items.length === 0) {
+                cartItemsEl.innerHTML = '<p class="text-xs text-center text-[#2D2427]/60 py-14">Your floral bag is empty.</p>';
+                cartFooterEl.classList.add('hidden');
+                return;
+            }
+
+            cartFooterEl.classList.remove('hidden');
+            cartSubtotalEl.textContent = '৳' + Number(data.subtotal).toFixed(2);
+            cartItemsEl.innerHTML = data.items.map(item => `
+                <div class="flex gap-4 pb-4 border-b border-[#E3D6BF]/70">
+                    <img src="${item.image}" alt="${item.name}" class="w-16 h-20 rounded-xl object-cover border border-[#E3D6BF]">
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-start gap-2">
+                            <h3 class="font-serif-display text-lg font-semibold text-[#2D2427] leading-tight">${item.name}</h3>
+                            <button onclick="updateCartItem(${item.id}, 0)" class="text-[11px] text-[#9F9679] hover:text-[#933B5B]">Remove</button>
+                        </div>
+                        <p class="text-xs text-[#933B5B] font-medium mt-0.5">৳${Number(item.price).toFixed(2)}</p>
+                        <div class="mt-2 inline-flex items-center border border-[#E3D6BF] rounded-full bg-white">
+                            <button onclick="updateCartItem(${item.id}, ${item.quantity - 1})" class="px-2.5 py-0.5 text-xs hover:text-[#933B5B]">−</button>
+                            <span class="px-2 text-xs font-medium">${item.quantity}</span>
+                            <button onclick="updateCartItem(${item.id}, ${item.quantity + 1})" class="px-2.5 py-0.5 text-xs hover:text-[#933B5B]">+</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function loadCart() {
+            try {
+                const res = await fetch("{% url 'cart_api' %}");
+                if (res.ok) renderCart(await res.json());
+            } catch (err) { console.error(err); }
+        }
+
+        async function addToCart(productId, quantity = 1) {
+            const res = await fetch("{% url 'cart_add' %}", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN },
+                body: JSON.stringify({ product_id: productId, quantity: quantity })
+            });
+            if (res.ok) {
+                renderCart(await res.json());
+                openCart();
+            }
+        }
+
+        async function updateCartItem(productId, quantity) {
+            const res = await fetch("{% url 'cart_update' %}", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN },
+                body: JSON.stringify({ product_id: productId, quantity: quantity })
+            });
+            if (res.ok) renderCart(await res.json());
+        }
+
+        document.getElementById('cart-btn').addEventListener('click', () => { loadCart(); openCart(); });
+        document.getElementById('cart-close').addEventListener('click', closeCart);
+        cartBackdrop.addEventListener('click', closeCart);
+        document.addEventListener('DOMContentLoaded', loadCart);
+    </script>
+
+</body>
+</html>

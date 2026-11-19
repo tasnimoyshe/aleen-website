@@ -1,0 +1,39 @@
+{% extends 'orders/staff_base.html' %}
+{% block title %}Staff Login — Aleen Internal{% endblock %}
+
+{% block content %}
+<section class="min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-md bg-white rounded-3xl border border-[#E3D6BF] shadow-sm p-8 sm:p-10">
+        <div class="text-center mb-8">
+            <p class="text-[11px] uppercase tracking-[0.26em] text-[#9F9679] font-semibold">Internal Access Only</p>
+            <h1 class="font-serif-display text-4xl font-semibold text-[#933B5B] mt-1">ALEEN Staff</h1>
+            <p class="text-xs text-[#2D2427]/65 mt-2">Founder-এর দেওয়া ইউজারনেম ও পাসওয়ার্ড দিয়ে লগইন করুন</p>
+        </div>
+
+        {% if error %}
+        <div class="mb-5 px-4 py-3 rounded-xl bg-[#933B5B]/10 border border-[#933B5B]/30 text-[#933B5B] text-xs text-center font-medium">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label class="block text-xs uppercase tracking-wider text-[#2D2427]/75 mb-1.5">Username</label>
+                <input type="text" name="username" required autofocus
+                       class="w-full px-4 py-3 rounded-xl border border-[#E3D6BF] bg-[#FAF7F2]/60 text-sm focus:outline-none focus:border-[#933B5B]">
+            </div>
+            <div>
+                <label class="block text-xs uppercase tracking-wider text-[#2D2427]/75 mb-1.5">Password</label>
+                <input type="password" name="password" required
+                       class="w-full px-4 py-3 rounded-xl border border-[#E3D6BF] bg-[#FAF7F2]/60 text-sm focus:outline-none focus:border-[#933B5B]">
+            </div>
+
+            <button type="submit"
+                    class="w-full mt-2 py-3.5 rounded-full bg-[#933B5B] text-white text-xs uppercase tracking-[0.18em] font-semibold shadow-sm hover:bg-[#B5728A] transition">
+                Sign In to Staff Portal
+            </button>
+        </form>
+    </div>
+</section>
+{% endblock %}

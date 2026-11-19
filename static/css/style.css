@@ -1,0 +1,37 @@
+:root {
+    --amaranth: #933B5B;
+    --thulian-pink: #B5728A;
+    --brook-green: #AABAAE;
+    --chalk: #E3D6BF;
+    --pomelo-olive: #9F9679;
+    --soft-base: #FAF7F2;
+    --dark-text: #2D2427;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--soft-base);
+    color: var(--dark-text);
+    font-family: 'Poppins', sans-serif;
+}
+
+.font-serif-display {
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.bg-amaranth { background-color: var(--amaranth); }
+.text-amaranth { color: var(--amaranth); }
+.bg-thulian { background-color: var(--thulian-pink); }
+.bg-brook { background-color: var(--brook-green); }
+.bg-chalk { background-color: var(--chalk); }
+.bg-olive { background-color: var(--pomelo-olive); }
+.border-brook { border-color: var(--brook-green); }
+.border-olive { border-color: var(--pomelo-olive); }
+
+/* হিরো বুকে অ্যানিমেশন কন্টেইনার */
+.hero-bouquet-stage {
+    perspective: 1000px;
+}

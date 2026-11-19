@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.name }} — Aleen Floral Atelier{% endblock %}
+
+{% block content %}
+<section class="max-w-6xl mx-auto px-6 py-12">
+    <a href="{% url 'shop' %}?category={{ product.category.slug }}" class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[#9F9679] hover:text-[#933B5B] mb-8 transition">
+        ← Back to {{ product.category.name }}
+    </a>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <!-- Product Image -->
+        <div class="lg:col-span-6">
+            <div class="aspect-[4/5] rounded-3xl overflow-hidden bg-[#E3D6BF]/40 border border-[#E3D6BF] shadow-sm">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+            </div>
+        </div>
+
+        <!-- Product Story & Add to Bag -->
+        <div class="lg:col-span-6 space-y-6 lg:pt-4">
+            <div>
+                <span class="text-[11px] uppercase tracking-[0.22em] text-[#B5728A] font-semibold">{{ product.category.name }}</span>
+                <h1 class="font-serif-display text-4xl sm:text-5xl font-semibold text-[#2D2427] mt-1">{{ product.name }}</h1>
+
+                <div class="mt-3">
+                    {% if product.has_discount %}
+                    <p class="text-base text-[#2D2427]/45 line-through">৳{{ product.selling_price }}</p>
+                    <p class="text-2xl font-semibold text-[#933B5B]">৳{{ product.current_price }}</p>
+                    {% else %}
+                    <p class="text-2xl font-semibold text-[#933B5B]">৳{{ product.selling_price }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if product.story_description %}
+            <div class="bg-[#E3D6BF]/35 border border-[#E3D6BF] rounded-2xl p-5">
+                <p class="text-[11px] uppercase tracking-[0.18em] text-[#933B5B] font-semibold mb-1.5">The Sentiment</p>
+                <p class="text-sm text-[#2D2427]/80 leading-relaxed">{{ product.story_description }}</p>
+            </div>
+            {% endif %}
+
+            {% if product.short_description %}
+            <p class="text-sm text-[#2D2427]/75 leading-relaxed">{{ product.short_description }}</p>
+            {% endif %}
+
+            <!-- Quantity & CTA -->
+            {% if product.is_in_stock %}
+            <div class="pt-2 space-y-4">
+                <div class="flex items-center gap-4">
+                    <span class="text-xs uppercase tracking-widest text-[#2D2427]/70">Quantity</span>
+                    <div class="inline-flex items-center border border-[#9F9679]/50 rounded-full bg-white">
+                        <button type="button" onclick="changeDetailQty(-1)" class="px-4 py-2 text-sm hover:text-[#933B5B]">−</button>
+                        <input id="detail-qty" type="number" value="1" min="1" max="{{ product.stock_qty }}" readonly
+                               class="w-10 text-center text-sm font-medium bg-transparent focus:outline-none">
+                        <button type="button" onclick="changeDetailQty(1)" class="px-4 py-2 text-sm hover:text-[#933B5B]">+</button>
+                    </div>
+                    <span class="text-xs text-[#9F9679]">{{ product.stock_qty }} available</span>
+                </div>
+
+                <button onclick="addToCart({{ product.id }}, parseInt(document.getElementById('detail-qty').value))"
+                        class="w-full py-4 rounded-full bg-[#933B5B] text-white text-xs uppercase tracking-[0.2em] font-medium shadow-md hover:bg-[#B5728A] transition">
+                    Add to Bag — ৳{{ product.current_price }}
+                </button>
+            </div>
+            {% else %}
+            <div class="p-4 rounded-2xl bg-[#E3D6BF]/50 text-center text-xs uppercase tracking-widest text-[#2D2427]/70">
+                Currently Sold Out
+            </div>
+            {% endif %}
+
+            <!-- Delivery Notes -->
+            <div class="pt-4 border-t border-[#E3D6BF] space-y-2 text-xs text-[#2D2427]/75">
+                <p>✦ Complimentary delivery across all sectors of Uttara.</p>
+                <p>✦ No account required — quick guest checkout.</p>
+                <p>✦ Handcrafted fresh before dispatch.</p>
+            </div>
+        </div>
+    </div>
+
+    {% if related_products %}
+    <div class="mt-20 pt-12 border-t border-[#E3D6BF]">
+        <h2 class="font-serif-display text-3xl font-semibold text-[#2D2427] mb-8 text-center">You May Also Love</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {% for item in related_products %}
+            <a href="{% url 'product_detail' item.slug %}" class="group block text-center">
+                <div class="aspect-square rounded-2xl overflow-hidden border border-[#E3D6BF] bg-[#E3D6BF]/30">
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <h3 class="font-serif-display text-xl font-semibold text-[#2D2427] mt-3">{{ item.name }}</h3>
+                <div class="mt-0.5">
+                    {% if item.has_discount %}
+                    <p class="text-[11px] text-[#2D2427]/45 line-through">৳{{ item.selling_price }}</p>
+                    <p class="text-xs text-[#933B5B] font-semibold">৳{{ item.current_price }}</p>
+                    {% else %}
+                    <p class="text-xs text-[#933B5B] font-semibold">৳{{ item.selling_price }}</p>
+                    {% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</section>
+
+<script>
+    function changeDetailQty(delta) {
+        const input = document.getElementById('detail-qty');
+        const max = parseInt(input.max) || 1;
+        let val = parseInt(input.value) + delta;
+        if (val < 1) val = 1;
+        if (val > max) val = max;
+        input.value = val;
+    }
+</script>
+{% endblock %}
